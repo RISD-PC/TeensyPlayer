@@ -196,8 +196,8 @@ void TeensyPlayer::playRangeStartStopWithSpeedControl(int startIndex, int endInd
 }
 
 // this function will interrupt files that are playing, when button pressed
-void TeensyPlayer::playRangeControlledByUpDownButtons( char* arrayName[], int maxFilenameIndex,
-    Bounce * downButton, Bounce * upButton, AudioPlaySdWav* SdWaveplayer, int startIndex, int endIndex) {
+void TeensyPlayer::playRangeControlledByUpDownButtons(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex,
+    Bounce * downButton, Bounce * upButton, AudioPlaySdWav* SdWaveplayer) {
 
   static int index = startIndex;
   static int playEnable = 0;

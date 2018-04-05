@@ -113,7 +113,7 @@ int maxFilenameIndex2 = (sizeof(fileNameArray2)  / sizeof(fileNameArray2[0]));
 TeensyPlayer player1;
 TeensyPlayer player2;
 TeensyPlayer player3;
-TeensyPlayer player4;
+TeensyPlayer player4;  
 TeensyPlayer player5;
 TeensyPlayer player6;
 
@@ -209,7 +209,7 @@ void loop() {
   // don't remove the return above or strange things are going to happen
 
   // void playAfileInAnArray(fileIndex (number to play in array), arrayName, maxFilenameIndex, buttonName, &playSdWav)
-  // enter arrayName, maxFileIndex, buttonName, SDplayerName, and fileIndex you are using
+  // enter fileIndex, arrayName, maxFileIndex, buttonName, SDplayerName you are using
   // don't forget the proceeding ampersands
   // playAfileInAnArray(indexToPlayInArray, fileNameArray, maxFilenameIndex, button1, &playSdWav1);
   // Example: playAfileInAnArray(0, fileNameArray, maxFilenameIndex, button1, &playSdWav1);
