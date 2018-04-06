@@ -6,15 +6,16 @@
     but you'll have to solder (stranded!) wires on them and bring them out to the breadboard.
     
     For the Teensy & Teensy Audio Shield WAV player example
-    Hardware: Two pots connected to pins 15 & 16
+    Hardware: Two 10k (104) pots, outside leads connected to ground and +3.3V 
+    Wipers connected to pins 16 & 17
+    
     3 pushbuttons connected to pins 0, 1, 2
     ****   Important - switches wired with ONLY one wire to ground ****
-    ****   The swtivh connects input to ground when pushed         ****
+    ****   The switch connects input to ground when pushed         ****
+    ****   NO PULLDOWN RESISTORS SHOULD BE ADDED!                  ****
+ 
     Teensy Audio Shield, Teensy 3.2 or similar
-
-    Shows how to play files from an array of titles using
-    push buttons in a variety of manners.
-    Also demonstrates how to use to wav player objects to layer sounds
+    Plays a single file for hardware check.
 */
 
 // make sure these libraries are only included once!
