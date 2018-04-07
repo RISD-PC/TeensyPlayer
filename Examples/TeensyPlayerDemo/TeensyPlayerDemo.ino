@@ -17,14 +17,14 @@
     ****   The switch connects input to ground when pushed         ****
     ****   NO PULLDOWN RESISTORS SHOULD BE ADDED!                  ****
  
-    Plays a single file for hardware check.
+    Plays a single file for hardware check. 
 */
 
 // make sure these libraries are only included once!
 #include <Audio.h>
 #include <Wire.h>
 #include <SerialFlash.h>
-#include <Bounce.h>
+#include <Bounce.h>"
 #include <SPI.h>
 #include <SD.h>
 #include "TeensyPlayer.h"

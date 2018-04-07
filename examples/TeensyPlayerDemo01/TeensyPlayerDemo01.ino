@@ -4,17 +4,19 @@
     This means that you may use pins 0, 1, 2, 3, 4, 5, 8, 16, 17, 20, 21, A10, A11.
     Additionally, there are lots more pins on the bottom side of the Teensy board
     but you'll have to solder (stranded!) wires on them and bring them out to the breadboard.
-    
+
     For the Teensy & Teensy Audio Shield WAV player example
-    Hardware: Two 10k (104) pots, outside leads connected to ground and +3.3V 
+    Hardware:
+    Teensy Audio Shield, Teensy 3.2 or similar
+
+    Two 10k (104) pots, outside leads connected to ground and +3.3V
     Wipers connected to pins 16 & 17
-    
+
     3 pushbuttons connected to pins 0, 1, 2
     ****   Important - switches wired with ONLY one wire to ground ****
     ****   The switch connects input to ground when pushed         ****
     ****   NO PULLDOWN RESISTORS SHOULD BE ADDED!                  ****
- 
-    Teensy Audio Shield, Teensy 3.2 or similar
+
     Plays a single file for hardware check.
 */
 
@@ -22,15 +24,16 @@
 #include <Audio.h>
 #include <Wire.h>
 #include <SerialFlash.h>
-#include <Bounce.h>
+#include <Bounce.h>"
 #include <SPI.h>
 #include <SD.h>
-#include "TeensyPlayer.h"
+#include <TeensyPlayer.h>
 // #include <Adafruit_LIS3DH.h> // uncomment for accelerometer
 // #include <Adafruit_Sensor.h>
 
 
-// define ACCELEROMETER  // uncomment this to use the accelerometer
+// #define ACCELEROMETER  // uncomment this to use the accelerometer
+// #defint DEBUG_BUTTONS  // uncomment to print button debugging
 
 #ifdef ACCELEROMETER
 #define LIS3DH_CS 10
@@ -64,7 +67,6 @@ AudioConnection          patchCord14(mixer3, 0, i2s1, 1);
 AudioControlSGTL5000     sgtl5000_1;     //xy=427,172
 // GUItool: end automatically generated code
 
-
 // Use these with the audio adaptor board
 #define SDCARD_CS_PIN    10
 #define SDCARD_MOSI_PIN  7
@@ -96,9 +98,9 @@ int accel, lastAccel, track;
 // file names are 8.3 format - eight characters only, '.' , "wav" extension
 
 char* fileNameArray[] =
-{ "one.wav", "Click.wav", "Click.wav", "Whaan.wav", "SshSsh.wav", // break lines like this
-  "Whaan.wav", "Click.wav", "Click.wav", "SshSsh.wav", "Click.wav"  // use your own titles!
-};
+  { "one.wav", "Click.wav", "Click.wav", "Whaan.wav", "SshSsh.wav", // break lines like this
+    "Whaan.wav", "Click.wav", "Click.wav", "SshSsh.wav", "Click.wav"  // use your own titles!
+  };
 
 // This is an example of a two-dimensional array
 // The first dimension is the letters (chars) in the title,
@@ -176,7 +178,7 @@ void setup() {
     // no SD card found, stop here, but print a message repetitively
     while (1) {
       Serial.println("Unable to access the SD card");
-      Serial.println("Check to see that you are not using pins 6,7,9,11,12,13,14,18,19,22,23");
+      Serial.println("Check to see that you are not using pins 6, 7, 9, 11, 12, 13, 14, 18, 19, 22, 23");
       Serial.println("Check the soldering on all Teensy and Audio Shield pins");
       delay(2000);
     }
@@ -191,24 +193,68 @@ void setup() {
   Serial.println("TNumber of titles in fileNameArray2");
 
   readSensors();
-  delay(2000); // allow user to read above information in Serial Monitor 
+  delay(2000); // to read information above
 }
 
 
 void loop() {
+  //  /****** uncomment the lines below for a quick check of your hardware  *******/
+  //	 if (!playSdWav1.isPlaying()) {
+  //      playSdWav1.play("one.wav");    // make sure this filename is on your SD card
+  //      delay(3); // short delay seems to be necessary or it skips files
+  //    }
+  //   return;
 
   readSensors(); // all the pots, switch and accelerometer readings are in readSensors()
 
-  /* This is just intended as a hardware check. The following code
-      plays a single file over and over again.
-  */
+  player1.startStopPlayAfileInAnArray(0, fileNameArray, maxFilenameIndex, button1, &playSdWav1);
+  player2.playAFileWhileButtonDown(2, fileNameArray, maxFilenameIndex, button2, &playSdWav2);
+  //  player3.startStopPlayAfileInAnArray(1, fileNameArray, maxFilenameIndex, button3, &playSdWav3);
+  //  player4.startStopPlayAfileInAnArray(0, fileNameArray2, maxFilenameIndex2, button3, &playSdWav4); uses second array
 
-  if (!playSdWav1.isPlaying()) {
-    playSdWav1.play("1.wav");    // make sure this filename is on your SD card
-    delay(3); // short delay seems to be necessary or it skips files
-  }
+  return;   // put code to test above the return - nothing below return will play or is active
+  // comments and code below this return are just for explanation of the functions ("methods" is the correct name)
+  // don't remove the return above or strange things are going to happen
 
-} 
+  // void playAfileInAnArray(fileIndex (number to play in array), arrayName, maxFilenameIndex, buttonName, &playSdWav)
+  // enter fileIndex, arrayName, maxFileIndex, buttonName, SDplayerName you are using
+  // don't forget the proceeding ampersands
+  // playAfileInAnArray(indexToPlayInArray, fileNameArray, maxFilenameIndex, button1, &playSdWav1);
+  // Example: playAfileInAnArray(0, fileNameArray, maxFilenameIndex, button1, &playSdWav1);
+
+  // plays a file while the button is down, stops on button up
+  // playAfileWhileButtonDown(fileIndex, arrayName, maxFilenameIndex, &buttonName, &playSdWav)
+  // Example: playAFileWhileButtonDown(2, fileNameArray, maxFilenameIndex, button2, &playSdWav2);
+
+  // void playRangeOfFilesInAnArray(arrayName, maxFilenameIndex, &buttonName, &playSdWav, startFileIndex, endFileIndex)
+  // Example: playRangeOfFilesInAnArray(0, 3, fileNameArray, maxFilenameIndex, button3, &playSdWav3);
+
+  // when button is pressed, it plays one file contstantly until button is pushed again
+  // void startStopPlayAfileInAnArray(fileIndex, arrayName, maxFilenameIndex, ButtonName, SdWaveplayer){
+  // Example: startStopPlayAfileInAnArray(3, fileNameArray2, maxFilenameIndex2,  button1, &playSdWav1);
+
+  // plays a range of titles in an array. Speed is controlled by the parameter passed in speedMS
+  // play toggles on and off with press of buttonName
+  // playRangeStartStopWithSpeedControl(arrayName, maxFilenameIndex, &buttonName, &SdWaveplayer, speedMS, startIndex, endIndex)
+  // Example lines below:
+  // unsigned int speedMS = (controlPotVal * 2) + 10;  // 10 mS to 2 sec    // copy this line too - for testing above
+  // playRangeStartStopWithSpeedControl(1, 4, fileNameArray2, maxFilenameIndex2, button3, &playSdWav3, speedMS);
+
+  // playRangeControlledByUpDownButtons
+  // Up-down buttons. Plays one file at a time and stops.
+  // One button moves forward through files, the other retreats.
+  // interrupts playing file with new one
+  // playRangeControlledByUpDownButtons(int startIndex, int endIndex, arrayName, maxFilenameIndex, &downButtonName, &upButtonName, &SdWaveplayer) {
+  // Example: playRangeControlledByUpDownButtons( 0, 2, fileNameArray, maxFilenameIndex, button2, button3, &playSdWav2);
+
+
+  // plays an index in a range govened by a sensor. The function is not triggered to play a new file
+  // until the sensor input changes. "track" shoud be a value between startIndex and endIndex (inclusive).
+  // you must uncomment "ifdef ACCELEROMETER" at the top of the sketch to use this function
+  // you must also have an accelerometer hooked up
+  //    accel = lis.x;
+  //    playRangeControlledByAccelerometer(fileNameArray, maxFilenameIndex, &playSdWav3, accel, 0, 4);
+}  // loop end
 
 void readSensors() {
   volumePotVal = analogRead(volumePotPin);  // comment out if you don't have volume control
@@ -233,12 +279,15 @@ void readSensors() {
   button2->update();
   button3->update();
   /*  debug switches */
+
+#ifdef DEBUG_BUTTONS
   Serial.println(button1->read());
-  // Serial.print("\t");
-  //  Serial.print(button2.read());
-  //  Serial.print("\t");
-  //  Serial.println(button3.read());
-  // delay(3);  // use this with debugging then comment out again for faster sketch execution
+  Serial.print("\t");
+  Serial.print(button2->read());
+  Serial.print("\t");
+  Serial.println(button3->read());
+  delay(3);  // use this with debugging then comment out again for faster sketch execution
+#endif
 }
 
 int smoothed(int input) {
