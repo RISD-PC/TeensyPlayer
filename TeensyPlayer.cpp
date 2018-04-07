@@ -105,6 +105,37 @@ void TeensyPlayer::playRangeOfFilesInAnArray(int startIndex, int endIndex, char*
   }
 };
 
+// this function will interrupt files that are playing, when button pressed
+void TeensyPlayer::playRangeControlledByUpDownButtons(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex,
+                                                           Bounce * downButton, Bounce * upButton, AudioPlaySdWav* SdWaveplayer) {
+    
+    if (upButton->fallingEdge()) { // up - this is governed by UpDown parameter passed in.
+        
+        // defensive programming - check params to make sure they are valid
+        if ((startIndex > endIndex) || (endIndex >= maxFilenameIndex)) {
+            Serial.println(" playRangeControlledByUp_DownButtons parameters are invalid ");
+            Serial.println(" startIndex > endIndex OR endIndex >= maxFilenameIndex, parameters illegal! ");
+            return;  // bail out
+        }
+        UpDownRangeIndex++;
+        UpDownRangePlayEnable = 1;
+    }
+    else if (downButton->fallingEdge()) { // down
+        UpDownRangeIndex--;
+        UpDownRangePlayEnable = 1;
+    }
+    
+    if (UpDownRangePlayEnable) {
+        // UpDownRangeIndex = constrain(UpDownRangeIndex, startIndex, endIndex);  // stay at endpoint index when you get there
+        //  rollover as an alternative below
+        if (UpDownRangeIndex > endIndex) UpDownRangeIndex = startIndex;
+         if (UpDownRangeIndex < startIndex) UpDownRangeIndex = endIndex;
+        //    Serial.print("index = ");
+        //    Serial.println(index);
+        SdWaveplayer -> play(arrayName[UpDownRangeIndex]);  // note I used another SDcard player
+        UpDownRangePlayEnable = 0;   // comment this line out for infinite play once button is pushed
+    }
+}
 
 
 void TeensyPlayer::playRangeOfFilesWithSpeedControl(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex, Bounce* buttonName,
@@ -195,37 +226,8 @@ void TeensyPlayer::playRangeStartStopWithSpeedControl(int startIndex, int endInd
   }
 }
 
-// this function will interrupt files that are playing, when button pressed
-void TeensyPlayer::playRangeControlledByUpDownButtons(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex,
-    Bounce * downButton, Bounce * upButton, AudioPlaySdWav* SdWaveplayer) {
 
-  static int index = startIndex;
-  static int playEnable = 0;
 
-  if (upButton->fallingEdge()) { // up - this is governed by UpDown parameter passed in.
-
-    // defensive programming - check params to make sure they are valid
-    if ((startIndex > endIndex) || (endIndex >= maxFilenameIndex)) {
-      Serial.println(" playRangeControlledByUp_DownButtons parameters are invalid ");
-      Serial.println(" startIndex > endIndex OR endIndex >= maxFilenameIndex, parameters illegal! ");
-      return;  // bail out
-    }
-    index++;
-    playEnable = 1;
-  }
-  else if (downButton->fallingEdge()) { // down
-    index--;
-    playEnable = 1;
-  }
-
-  if (playEnable) {
-    index = constrain(index, startIndex, endIndex);  // stay at endpoint index when you get there - might rollover as an alternative
-    //    Serial.print("index = ");
-    //    Serial.println(index);
-    SdWaveplayer -> play(arrayName[index]);  // note I used another SDcard player
-    playEnable = 0;   // comment this line out for infinite play once button is pushed
-  }
-}
 
 
 

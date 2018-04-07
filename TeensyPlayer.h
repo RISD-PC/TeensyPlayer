@@ -20,6 +20,8 @@ class TeensyPlayer {
     int average = 0;
     int smoothInit = 0;
     const int numReadings = 20;
+    int UpDownRangeIndex;
+    int UpDownRangePlayEnable;
 
   public:
     static int totalPlaying;
@@ -31,9 +33,8 @@ class TeensyPlayer {
     void startStopPlayAfileInAnArray(int index, char* arrayName[], int maxFilenameIndex, Bounce * buttonName, AudioPlaySdWav * SdWaveplayer);
 
     void playRangeOfFilesInAnArray(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex, Bounce * buttonName, AudioPlaySdWav * SdWaveplayer);
-
-    void playRangeControlledByUpDownButtons(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex,
-        Bounce * downButton, Bounce * upButton, AudioPlaySdWav* SdWaveplayer);
+    
+    void playRangeControlledByUpDownButtons(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce *downButtonName, Bounce *upButtonName, AudioPlaySdWav *SdWaveplayer);
 
     void playRangeStartStopWithSpeedControl(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex, Bounce *buttonName,
         AudioPlaySdWav * SdWaveplayer, int speedMS);
