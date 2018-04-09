@@ -26,20 +26,20 @@ class TeensyPlayer {
   public:
     static int totalPlaying;
 
-    void playAfileInAnArray(int index, char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer );
+    void playAfileInAnArray(int index, const char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer );
 
-    void playAFileWhileButtonDown(int index, char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer);
+    void playAFileWhileButtonDown(int index, const char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer);
 
-    void startStopPlayAfileInAnArray(int index, char* arrayName[], int maxFilenameIndex, Bounce * buttonName, AudioPlaySdWav * SdWaveplayer);
+    void startStopPlayAfileInAnArray(int index, const char* arrayName[], int maxFilenameIndex, Bounce * buttonName, AudioPlaySdWav * SdWaveplayer);
 
-    void playRangeOfFilesInAnArray(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex, Bounce * buttonName, AudioPlaySdWav * SdWaveplayer);
+    void playRangeOfFilesInAnArray(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce * buttonName, AudioPlaySdWav * SdWaveplayer);
     
     void playRangeControlledByUpDownButtons(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce *downButtonName, Bounce *upButtonName, AudioPlaySdWav *SdWaveplayer);
 
-    void playRangeStartStopWithSpeedControl(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex, Bounce *buttonName,
+    void playRangeStartStopWithSpeedControl(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce *buttonName,
         AudioPlaySdWav * SdWaveplayer, int speedMS);
 
-    void playRangeOfFilesWithSpeedControl(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex, Bounce *buttonName,
+    void playRangeOfFilesWithSpeedControl(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce *buttonName,
                                            AudioPlaySdWav *SdWaveplayer, int speedMS);
 
 };

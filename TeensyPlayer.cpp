@@ -2,7 +2,7 @@
 #include <Bounce.h>
 #include <Audio.h>
 
-void TeensyPlayer::playAfileInAnArray(int index, char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer) {
+void TeensyPlayer::playAfileInAnArray(int index, const char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer) {
   // uses button 1, playSdWav2 - change (two places!) to suit your needs
 
   if (theButton->fallingEdge()) {   // will play once after the button is released - try it!
@@ -18,7 +18,7 @@ void TeensyPlayer::playAfileInAnArray(int index, char* arrayName[], int maxFilen
   }
 }
 
-void  TeensyPlayer::startStopPlayAfileInAnArray(int index, char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer) {
+void  TeensyPlayer::startStopPlayAfileInAnArray(int index, const char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer) {
   // pushbutton plays one file continuously, next pushbutton stops the file, etc.
   // static int startStopEnable;
 
@@ -44,7 +44,7 @@ void  TeensyPlayer::startStopPlayAfileInAnArray(int index, char* arrayName[], in
   }
 };
 
-void TeensyPlayer::playAFileWhileButtonDown(int index, char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer) {
+void TeensyPlayer::playAFileWhileButtonDown(int index, const char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer) {
   // plays a file while the button is down - plays the whole file before repeating
   if (theButton->read() == 0) {   // will play once after the button is released - try it!
 
@@ -66,7 +66,7 @@ void TeensyPlayer::playAFileWhileButtonDown(int index, char* arrayName[], int ma
 
 
 
-void TeensyPlayer::playRangeOfFilesInAnArray(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex, Bounce* buttonName,
+void TeensyPlayer::playRangeOfFilesInAnArray(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce* buttonName,
     AudioPlaySdWav* SdWaveplayer) {
   // uses button3 and playSdWav3 change them if you wish - change playSdWav3 in two places
 
@@ -138,7 +138,7 @@ void TeensyPlayer::playRangeControlledByUpDownButtons(int startIndex, int endInd
 }
 
 
-void TeensyPlayer::playRangeOfFilesWithSpeedControl(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex, Bounce* buttonName,
+void TeensyPlayer::playRangeOfFilesWithSpeedControl(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce* buttonName,
     AudioPlaySdWav* SdWaveplayer, int speedMS) {
 
   if (buttonName->fallingEdge()) {
@@ -175,7 +175,7 @@ void TeensyPlayer::playRangeOfFilesWithSpeedControl(int startIndex, int endIndex
   }
 }
 
-void TeensyPlayer::playRangeStartStopWithSpeedControl(int startIndex, int endIndex, char* arrayName[], int maxFilenameIndex, Bounce * buttonName,
+void TeensyPlayer::playRangeStartStopWithSpeedControl(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce * buttonName,
     AudioPlaySdWav * SdWaveplayer, int speedMS) {
 
   // This function will start with a button press and stop with a button press. It plays a a range of files
