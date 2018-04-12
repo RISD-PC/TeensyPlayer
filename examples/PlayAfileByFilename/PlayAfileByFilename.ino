@@ -31,8 +31,8 @@
 
 /*** Debugging - uncomment line to print debugging information ***/
 // #define ACCELEROMETER  // uncomment this to use the accelerometer
-// #define DEBUG_BUTTONS  // uncomment to print button debugging
-// #define DEBUG_POTS     //	 uncomment to print pot debugging
+#define DEBUG_BUTTONS  // uncomment to print button debugging
+#define DEBUG_POTS     //	 uncomment to print pot debugging
 // #define DEBUG_SMOOTH   // uncomment to debug smooth function
 
 #ifdef ACCELEROMETER
@@ -139,6 +139,9 @@ void setup() {
   }
 #endif
 
+pinMode(volumePotPin, INPUT);
+pinMode(controlPotPin, INPUT);
+
 #ifdef ACCELEROMETER
   Serial.println("LIS3DH found!");
   lis.setRange(LIS3DH_RANGE_4_G);   // 2, 4, 8 or 16 G!
@@ -202,56 +205,32 @@ void setup() {
 void loop() {
 
   readSensors(); // all the pots, switch and accelerometer readings are in readSensors()
+  player1.playAfileByTitle("1.wav", button1, &playSdWav1);
 
-  // some examples - uncomment to try them out - you can use more than 1!
-    player1.startStopPlayAfileInAnArray(3, fileNameArray2, maxFilenameIndex2,  button1, &playSdWav1);
-  // player2.playAFileWhileButtonDown(2, fileNameArray, maxFilenameIndex, button2, &playSdWav2);
-  // player3.startStopPlayAfileInAnArray(1, fileNameArray, maxFilenameIndex, button3, &playSdWav3);
-  // player4.playRangeControlledByUpDownButtons(0, 4, fileNameArray2, maxFilenameIndex2, button1, button2, &playSdWav4); // uses second array
+// plays a file by file name. Good for testing hardware and simple things.
+// Example player1.playAfileByTitle("1.wav", button1, AudioPlaySdWav* SdWaveplayer);
 
-  return;   // put code to test above the return - nothing below return will play or is active
-  // comments and code below this return are just for explanation of the functions ("methods" is the correct name)
-  // don't remove the return above or strange things are going to happen
-
-  // void playAfileInAnArray(fileIndex (number to play in array), arrayName, maxFilenameIndex, buttonName, &playSdWav)
-  // enter fileIndex, arrayName, maxFileIndex, buttonName, SDplayerName you are using
-  // don't forget the proceeding ampersands
-  // playAfileInAnArray(indexToPlayInArray, fileNameArray, maxFilenameIndex, button1, &playSdWav1);
-  // Example: player1.playAfileInAnArray(0, fileNameArray, maxFilenameIndex, button1, &playSdWav1);
-
-  // plays a file while the button is down, stops on button up
-  // playAfileWhileButtonDown(fileIndex, arrayName, maxFilenameIndex, &buttonName, &playSdWav)
-  // Example: player1.playAFileWhileButtonDown(2, fileNameArray, maxFilenameIndex, button2, &playSdWav2);
-
-  // void playRangeOfFilesInAnArray(arrayName, maxFilenameIndex, &buttonName, &playSdWav, startFileIndex, endFileIndex)
-  // Example: player1.playRangeOfFilesInAnArray(0, 3, fileNameArray, maxFilenameIndex, button3, &playSdWav3);
-
-  // when button is pressed, it plays one file contstantly until button is pushed again
-   void startStopPlayAfileInAnArray(int index, const char* arrayName[], int maxFilenameIndex, Bounce * buttonName, AudioPlaySdWav * SdWaveplayer);
-  // Example: player1.startStopPlayAfileInAnArray(3, fileNameArray2, maxFilenameIndex2,  button1, &playSdWav1);
-
-  // plays a range of titles in an array. Speed is controlled by the parameter passed in speedMS
-  // play toggles on and off with press of buttonName
-  // playRangeStartStopWithSpeedControl(arrayName, maxFilenameIndex, &buttonName, &SdWaveplayer, speedMS, startIndex, endIndex)
-  // Example lines below:
-  // unsigned int speedMS = (controlPotVal * 2) + 10;  // 10 mS to 2 sec    // copy this line too - for testing above
-  // playRangeStartStopWithSpeedControl(1, 4, fileNameArray2, maxFilenameIndex2, button3, &playSdWav3, speedMS);
-
-  // playRangeControlledByUpDownButtons
-  // Up-down buttons. Plays one file at a time and stops.
-  // One button moves forward through files, the other retreats.
-  // interrupts playing file with new one
-  // playRangeControlledByUpDownButtons(int startIndex, int endIndex, arrayName, maxFilenameIndex, &downButtonName, &upButtonName, &SdWaveplayer) {
-  // Example: playRangeControlledByUpDownButtons( 0, 2, fileNameArray, maxFilenameIndex, button2, button3, &playSdWav2);
+}
 
 
-  // plays an index in a range govened by a sensor. The function is not triggered to play a new file
-  // until the sensor input changes. "track" shoud be a value between startIndex and endIndex (inclusive).
-  // you must uncomment "ifdef ACCELEROMETER" at the top of the sketch to use this function
-  // you must also have an accelerometer hooked up
-  //    accel = lis.x;
-  //    playRangeControlledByAccelerometer(fileNameArray, maxFilenameIndex, &playSdWav3, accel, 0, 4);
-}  // loop end
+
+void controlFileWithPot() {
+  // map the controlPotVal to the array of wav titles
+  // use maxFilenameIndex as the top index for the title array
+  // actually maxFilenameIndex is one larger than the top index, hence subtract one
+  int index;
+  static int lastControlPotVal;
+
+  Serial.print("            controlPotVal  ");     Serial.println(controlPotVal);
+  if (abs(controlPotVal - lastControlPotVal) > 40) {
+    index  = map(controlPotVal, 0, 1023, 0, maxFilenameIndex - 1);
+    lastControlPotVal = controlPotVal;
+ 
+    if (!playSdWav1.isPlaying()) {
+      player1.playFileOnceUntilIndexChanges(index, fileNameArray, maxFilenameIndex, &playSdWav1);
+    }
+  }
+}
 
 
 
