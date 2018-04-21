@@ -24,6 +24,8 @@ private:
     int UpDownRangePlayEnable;
     int playFileOnce_index;
     int playFileOnce_lastIndex;
+    int playFileCont_index;
+    int playFileCont_lastIndex;
     int playFileOnceStart;
     int playRangeStartStop_index;  // static variable are like global variables but "private" to this function
     int playRangeStartStop_initialized = 0;
@@ -34,8 +36,8 @@ public:
     static int totalPlaying;
     
     void playAfileByTitle(const char fileName[], Bounce* theButton, AudioPlaySdWav* SdWaveplayer);
-
-    void playAfileInAnArray(int index, const char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer );
+    
+    void playAfileInAnArray(int index, const char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer);
     
     void playAFileWhileButtonDown(int index, const char* arrayName[], int maxFilenameIndex, Bounce* theButton, AudioPlaySdWav* SdWaveplayer);
     
@@ -45,14 +47,15 @@ public:
     
     void playRangeControlledByUpDownButtons(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce *downButtonName, Bounce *upButtonName, AudioPlaySdWav *SdWaveplayer);
     
-    void playRangeStartStopWithSpeedControl(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce *buttonName,
-                                            AudioPlaySdWav * SdWaveplayer, int speedMS);
+    void playRangeStartStopWithSpeedControl(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce *buttonName, AudioPlaySdWav * SdWaveplayer, int speedMS);
     
-    void playRangeOfFilesWithSpeedControl(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce *buttonName,
-                                          AudioPlaySdWav *SdWaveplayer, int speedMS);
+    void playRangeOfFilesWithSpeedControl(int startIndex, int endIndex, const char* arrayName[], int maxFilenameIndex, Bounce *buttonName, AudioPlaySdWav *SdWaveplayer, int speedMS);
     
     void playFileOnceUntilIndexChanges(int index, const char* arrayName[], int maxFilenameIndex, AudioPlaySdWav *SdWaveplayer);
     
+    void playFileContinuously(int index, const char* arrayName[], int maxFilenameIndex, AudioPlaySdWav *SdWaveplayer);
+    
+    void stop(AudioPlaySdWav *SdWaveplayer);
 };
 
 #endif

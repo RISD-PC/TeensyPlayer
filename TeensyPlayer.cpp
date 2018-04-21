@@ -262,6 +262,37 @@ void TeensyPlayer::playFileOnceUntilIndexChanges(int index, const char* arrayNam
     }
 }
 
+void TeensyPlayer::playFileContinuously(int index, const char* arrayName[], int maxFilenameIndex, AudioPlaySdWav *SdWaveplayer){
+    // plays a file continuously until SdWaveplayer.stop() is called
+    // or new index is passed in
+    
+    playFileCont_index = index;
+    
+  //  if  (playFileCont_index != playFileCont_lastIndex){
+     // found a new file - stop the last one
+   //     SdWaveplayer->stop();
+   // }
+
+    
+    if ((playFileOnce_index <  0) || (playFileOnce_index >= maxFilenameIndex)) {
+        Serial.println(" playFileOnceUntilIndexChanges() index parameters illegal!");
+        return;  // function bails out
+    }
+    
+    if (!SdWaveplayer->isPlaying()){
+        SdWaveplayer->play(arrayName[index]);
+        delay(2);  // short delay seems to be necessary or it skips files
+    }
+}
+
+void TeensyPlayer::TeensyPlayer::stop(AudioPlaySdWav *SdWaveplayer){
+    SdWaveplayer->stop();
+}
+
+
+
+
+
 
 
 
